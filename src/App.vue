@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <Button @click="handleClick" label="LAUNCH THE MISSILES" />
+    <Button @click="increment" label="LOAD IT UP" />
+    <Gauge :progress="num" />
     <Logger :logs="logs"/>
    </div>
 </template>
@@ -9,6 +11,7 @@
 import Vue from 'vue'
 
 import Button from './components/button.vue'
+import Gauge from './components/gauge.vue'
 import Logger from './components/logger.vue'
 import api from './api'
 
@@ -28,6 +31,7 @@ export default {
   name: 'app',
   components: {
     Button,
+    Gauge,
     Logger
   },
   mounted () {
@@ -37,9 +41,13 @@ export default {
     })
   },
   data: () => ({
+    num: 0,
     logs: []
   }),
   methods: {
+    increment() {
+      this.num += 5
+    },
     handleClick() {
       rocketApi.armParachute()
     }
