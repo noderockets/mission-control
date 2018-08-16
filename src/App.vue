@@ -1,10 +1,12 @@
 <template>
   <div id="app">
-    <div>
-      <Button @click="handleClick" label="LAUNCH THE MISSILES" />
-      <Button @click="increment" label="LOAD IT UP" />
-    </div>
-    <Gauge :progress="num" />
+    <Gauge :progress="50" />
+    <Parsed :rocketData="rocketData" />
+    <Actions
+      @arm-parachute="armParachute"
+      @disarm-parachute="disarmParachute"
+      @deploy-parachute="deployParachute"
+    />
     <Logger :logStream="bus" />
   </div>
 </template>
@@ -15,6 +17,8 @@ import Vue from 'vue'
 import api from './api'
 import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
+import Actions from './components/actions.vue'
+import Parsed from './components/parsed.vue'
 import Logger from './components/logger.vue'
 
 const rocketApi = api({
@@ -27,24 +31,36 @@ rocketApi.onData(msg => {
   bus.$emit('data', msg)
 })
 
+rocketApi.onRocketData(msg => {
+  bus.$emit('rocket-data', msg)
+})
+
 export default {
   name: 'app',
   components: {
     Button,
     Gauge,
+    Actions,
+    Parsed,
     Logger
   },
   data: () => ({
     num: 0,
+    rocketData: {},
     bus
   }),
   methods: {
     increment() {
       this.num += 5
     },
-    handleClick() {
-      rocketApi.armParachute()
-    }
+    armParachute: rocketApi.armParachute,
+    disarmParachute: rocketApi.disarmParachute,
+    deployParachute: rocketApi.deployParachute
+  },
+  mounted () {
+    bus.$on('rocket-data', msg => {
+      this.rocketData = msg
+    })
   }
 }
 </script>
