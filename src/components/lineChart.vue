@@ -1,84 +1,82 @@
 <template>
-  <svg :width="width" :height="height" ref="svg">
-    <g ref="chart">
-      <path :d="path(data)" stroke="#ff6347" strokeWidth="3" fill="none" />
-    </g>
-    <g ref="circle"></g>
+  <svg :width="width" :height="height" :data="data" ref="svg">
+    <g ref="chart"></g>
     <g ref="axis"></g>
   </svg>
 </template>
 
 <script>
-import * as d3 from 'd3';
+import * as d3 from 'd3'
 export default {
   name: 'LineChart',
   props: {
     data: {
-      type: Array,
-      default: []
+      type: Object,
+      default: { x: 0, y: 0}
+    },
+    height: {
+      type: Number,
+      default: 500
+    },
+    width: {
+      type: Number,
+      default: 500
     }
   },
-  data() {
-    return {
-      width: 500,
-      height: 500,
-      selected: null
+  computed: {
+    xScale: function () {
+      return d3.scaleLinear().domain([0, 5]).range([0, this.width - 40])
+    },
+    yScale: function () {
+      return d3.scaleLinear().domain([5, -5]).range([0, this.height - 80])
     }
   },
   mounted() {
-    const margin = { top: 40, left: 40, bottom: 40, right: 0 };
-    const xScale = d3.scaleLinear().range([0, 400])
-    const yScale = d3.scaleLinear().range([0, 400])
-    const yAxis = d3.axisLeft(yScale).tickSizeInner(-420);
-    const xAxis = d3.axisBottom(xScale);
-    const chartWidth = this.width - (margin.left + margin.right);
-    const chartHeight = this.height - (margin.top + margin.bottom);
+    const margin = { top: 40, left: 40, bottom: 40, right: 0 }
 
-    d3
-      .select(this.$refs.chart)
+    const yAxis = d3.axisLeft(this.yScale).tickSizeInner(0 - this.height)
+    const xAxis = d3.axisBottom(this.xScale)
+
+    const chartWidth = this.width
+    const chartHeight = this.height
+
+    d3.select(this.$refs.chart)
       .attr('width', chartWidth)
       .attr('height', chartHeight)
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-    d3
-      .select(this.$refs.axis)
+      .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+    d3.select(this.$refs.axis)
       .append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`)
       .attr('class', 'axis y')
-      .call(yAxis);
-    d3
-      .select(this.$refs.axis)
+      .call(yAxis)
+
+    d3.select(this.$refs.axis)
       .append('g')
       .attr(
         'transform',
-        `translate(${margin.left}, ${chartHeight + margin.top})`
+        `translate(${margin.left}, ${chartHeight - 40})`
       )
       .attr('class', 'axis x')
-      .call(xAxis);
+      .call(xAxis)
   },
-  methods: {
-    path(data) {
-      return d3
-        .line()
-        .x(d => xScale(d.x))
-        .y(d => yScale(d.y))
-        .curve(d3.curveStepAfter);
-    },
-    xPoint(d) {
-      const yScale = d3
-        .scaleLinear()
-        .range([0, 420])
-        .domain([0, 500]);
-      return yScale(d.y);
-    },
-    yPoint(d) {
-      const xScale = d3
-        .scaleLinear()
-        .range([0, 400])
-        .domain([0, 10]);
-      return xScale(d.x);
-    }
+  updated () {
+    // const now = Date.now()
+    // const deltaTime = now - (this.prevTime || now)
+
+    // const { x, y } = this.data
+    // const line = d3.line().x(d => x).y(d => y)
+
+    // const chart = d3.select(this.$refs.chart)
+
+    // chart.transition().duration(deltaTime).ease('linear')
+    //   .append('svg:path')
+    //   .attr('transform', 'translate(' + 40 + ',0)')
+    //   .attr('g', line)
+
+    // this.prevTime = now
   }
-};
+}
 </script>
 
 <style>

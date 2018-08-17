@@ -93,7 +93,9 @@
       const accel = get(this.rocketData, 'accelerometer', {})
       const compass = get(this.rocketData, 'magnetometer', {})
 
-      const updates = madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z, timeElapsed).toVector()
+      madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z, timeElapsed)
+      const updates = madgwick.toVector()
+
 
       this.rocketModel.rotation.x = get(updates, 'x', 0)
       this.rocketModel.rotation.y = get(updates, 'y', 0)

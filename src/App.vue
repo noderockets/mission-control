@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Gauge :progress="50" />
-    <LineChart :data="chartData" />
+    <LineChart :data="accelerometer" :height="400" :width="400" />
     <Rocket :rocketData="rocketData" width="499px" height="499px"/>
     <Parsed :rocketData="rocketData" />
     <Actions
@@ -54,6 +54,17 @@ export default {
     rocketData: {},
     bus
   }),
+  computed: {
+    accelerometer () {
+      return this.rocketData.accelerometer || {}
+    },
+    gyroscope () {
+      return this.rocketData.gyroscope || {}
+    },
+    magnetometer () {
+      return this.rocketData.magnetometer || {}
+    }
+  },
   methods: {
     armParachute: rocketApi.armParachute,
     disarmParachute: rocketApi.disarmParachute,
