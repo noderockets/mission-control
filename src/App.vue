@@ -1,13 +1,14 @@
 <template>
   <div id="app">
-    <div>
-      <Button @click="handleClick" label="LAUNCH THE MISSILES" />
-      <Button @click="increment" label="LOAD IT UP" />
-      <Button @click="randomData" label="CHART DATA" />
-    </div>
-    <Gauge :progress="num" />
+    <Gauge :progress="50" />
     <LineChart :data="chartData" />
     <Rocket :rocketData="rocketData" width="499px" height="499px"/>
+    <Parsed :rocketData="rocketData" />
+    <Actions
+      @arm-parachute="armParachute"
+      @disarm-parachute="disarmParachute"
+      @deploy-parachute="deployParachute"
+    />
     <Logger :logStream="bus" />
   </div>
 </template>
@@ -20,6 +21,8 @@ import api from './api'
 import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
 import LineChart from './components/lineChart.vue'
+import Actions from './components/actions.vue'
+import Parsed from './components/parsed.vue'
 import Logger from './components/logger.vue'
 
 const rocketApi = api({
@@ -33,38 +36,31 @@ rocketApi.onData(msg => {
 })
 
 rocketApi.onRocketData(msg => {
-  bus.$emit('rocketData', msg)
+  bus.$emit('rocket-data', msg)
 })
 
 export default {
   name: 'app',
   components: {
+    Actions,
     Button,
     Gauge,
     LineChart,
     Logger,
+    Parsed,
     Rocket
   },
   data: () => ({
-    chartData: [],
-    num: 0,
-    bus,
-    rocketData: {}
+    rocketData: {},
+    bus
   }),
   methods: {
-    increment() {
-      this.num += 5
-    },
-    randomData() {
-      const prevX = this.chartData.length 
-      this.chartData.push({x: prevX + 1, y: Math.random() * 500})
-    },
-    handleClick() {
-      rocketApi.armParachute()
-    }
+    armParachute: rocketApi.armParachute,
+    disarmParachute: rocketApi.disarmParachute,
+    deployParachute: rocketApi.deployParachute
   },
   mounted() {
-    bus.$on('rocketData', msg => {
+    bus.$on('rocket-data', msg => {
       this.rocketData = msg
     })
   }
