@@ -1,12 +1,12 @@
 <template>
-  <canvas :width="width" :height="height" :rotation="rocketData.gyroscope"/>
+  <canvas ref="canvas" :width="width" :height="height" :rotation="rocketData.gyroscope"/>
 </template>
 
 <script>
   import * as THREE from 'three'
   import * as AHRS from 'ahrs'
   import { get } from 'lodash'
-  
+
   import loadLight from './loaders/light'
   import getRocketModel from './loaders/rocket'
 
@@ -20,57 +20,46 @@
     name: 'Button',
     props: {
       height: {
-        default: '500px',
-        type: String
+        default: 500,
+        type: Number
       },
       rocketData: {
         type: Object,
         default: {}
       },
       width: {
-        default: '500px',
-        type: String
+        default: 500,
+        type: Number
       }
     },
-    mounted () {
-      const loadControls = false
-      const scene = new THREE.Scene()
-      scene.background = new THREE.Color(0xe8e8e8)
-
-      const camera = new THREE.PerspectiveCamera(
+    data: () => ({
+      rocketModel: null,
+      scene: null,
+      camera: null,
+      renderer: null
+    }),
+    async mounted () {
+      this.scene = new THREE.Scene()
+      this.scene.background = new THREE.Color(0xe8e8e8)
+      this.camera = new THREE.PerspectiveCamera(
         75,
-        window.innerWidth / window.innerHeight,
+        this.width / this.height,
         0.1,
         10000
       )
-
-      camera.position.x = 0
-      camera.position.y = 0
-      camera.position.z = 10
-
-      const renderer = new THREE.WebGLRenderer()
-      renderer.setSize(window.innerWidth, window.innerHeight)
-      document.body.appendChild(renderer.domElement)
-
-      getRocketModel()
-        .then(rocketModel => {
-          this.rocketModel = rocketModel
-          scene.add(this.rocketModel)
-
-          loadLight(scene)
-      
-          const render = function() {
-            requestAnimationFrame(render)
-            renderer.render(scene, camera)
-          }
-
-          render()
-        })
+      this.camera.position.x = 0
+      this.camera.position.y = 0
+      this.camera.position.z = 10
+      this.renderer = new THREE.WebGLRenderer({ canvas: this.$refs.canvas })
+      this.rocketModel = await getRocketModel()
+      this.scene.add(this.rocketModel)
+      loadLight(this.scene)
+      this.renderer.render(this.scene, this.camera)
     },
     updated () {
       const curTimeStamp = get(this.rocketData, 'timestamp', Date.now())
       const prevTimeStamp = get(this.prevRocketData, 'timestamp', Date.now())
- 
+
       const timeElapsed = (curTimeStamp - prevTimeStamp) / 1000 // Seconds
 
 
@@ -96,13 +85,13 @@
       madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z, timeElapsed)
       const updates = madgwick.toVector()
 
-
       this.rocketModel.rotation.x = get(updates, 'x', 0)
       this.rocketModel.rotation.y = get(updates, 'y', 0)
       this.rocketModel.rotation.z = get(updates, 'z', 0)
       // #### Solution 2 ####
 
       this.prevRocketData = this.rocketData
+      this.renderer.render(this.scene, this.camera)
     }
   }
 </script>

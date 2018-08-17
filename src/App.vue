@@ -1,15 +1,28 @@
 <template>
   <div id="app">
-    <Gauge :progress="50" />
-    <LineChart :data="accelerometer" :height="400" :width="400" />
-    <Rocket :rocketData="rocketData" width="499px" height="499px"/>
-    <Parsed :rocketData="rocketData" />
-    <Actions
-      @arm-parachute="armParachute"
-      @disarm-parachute="disarmParachute"
-      @deploy-parachute="deployParachute"
-    />
-    <Logger :logStream="bus" />
+    <LineChart id="line" :data="accelerometer" :height="400" :width="400"/>
+    <div class="right-section">
+      <Rocket :rocketData="rocketData" :width="200" :height="500"/>
+      <Gauge :progress="50" />
+    </div>
+    <Tabs>
+      <Tab title="Logs">
+        <Logger :logStream="bus" />
+      </Tab>
+      <Tab title="Parsed">
+        <Parsed :rocketData="rocketData" />
+      </Tab>
+      <Tab title="Actions">
+        <Actions
+          @arm-parachute="armParachute"
+          @disarm-parachute="disarmParachute"
+          @deploy-parachute="deployParachute"
+        />
+      </Tab>
+      <Tab title="Strategies">
+        Strategies will go here!
+      </Tab>
+    </Tabs>
   </div>
 </template>
 
@@ -22,6 +35,8 @@ import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
 import LineChart from './components/lineChart.vue'
 import Actions from './components/actions.vue'
+import Tabs from './components/tabs.vue'
+import Tab from './components/tab.vue'
 import Parsed from './components/parsed.vue'
 import Logger from './components/logger.vue'
 
@@ -48,7 +63,9 @@ export default {
     LineChart,
     Logger,
     Parsed,
-    Rocket
+    Rocket,
+    Tabs,
+    Tab
   },
   data: () => ({
     rocketData: {},
@@ -86,13 +103,19 @@ body {
 
 #app {
   height: 100vh;
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  grid-template-rows: 2fr 1fr;
+  display: flex;
 }
 
-.logs {
-  grid-column: 1 / 3;
-  grid-row: 2 / 4;
+#line {
+  flex: 1;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.right-section > :last-child {
+  padding-top: 30px;
 }
 </style>

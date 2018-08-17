@@ -26,11 +26,11 @@ export default {
     progress: Number,
     innerRadius: {
       type: Number,
-      default: 50
+      default: 60
     },
     outerRadius: {
       type: Number,
-      default: 90
+      default: 100
     }
   },
   methods: {
