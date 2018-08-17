@@ -6,7 +6,7 @@
   import * as THREE from 'three'
   import * as AHRS from 'ahrs'
   import { get } from 'lodash'
-  
+
   import loadLight from './loaders/light'
   import getRocketModel from './loaders/rocket'
 
@@ -58,7 +58,7 @@
           scene.add(this.rocketModel)
 
           loadLight(scene)
-      
+
           const render = function() {
             requestAnimationFrame(render)
             renderer.render(scene, camera)
@@ -70,7 +70,7 @@
     updated () {
       const curTimeStamp = get(this.rocketData, 'timestamp', Date.now())
       const prevTimeStamp = get(this.prevRocketData, 'timestamp', Date.now())
- 
+
       const timeElapsed = (curTimeStamp - prevTimeStamp) / 1000 // Seconds
 
 
@@ -93,7 +93,8 @@
       const accel = get(this.rocketData, 'accelerometer', {})
       const compass = get(this.rocketData, 'magnetometer', {})
 
-      const updates = madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z, timeElapsed).toVector()
+      madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z, timeElapsed)
+      const updates = madgwick.toVector()
 
       this.rocketModel.rotation.x = get(updates, 'x', 0)
       this.rocketModel.rotation.y = get(updates, 'y', 0)

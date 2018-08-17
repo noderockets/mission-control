@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tabs">
     <ul>
       <li
         v-for="tab in tabs"
@@ -20,22 +20,23 @@ export default {
   }),
   methods: {
     clicked (tab) {
+      const wasVisible = tab.visible
       this.tabs.forEach(tab => (tab.visible = false))
-      tab.visible = true
+      if (!wasVisible) tab.visible = true
     }
   },
   created () {
     this.tabs = this.$children
-    this.$nextTick(() => {
-      this.tabs[0].visible = true
-    })
   }
 }
 </script>
 
 <style scoped>
-div {
-  grid-area: d;
+.tabs {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 ul {
@@ -47,6 +48,7 @@ ul {
 }
 
 li {
+  background: white;
   border: 1px solid black;
   border-right: none;
   cursor: pointer;

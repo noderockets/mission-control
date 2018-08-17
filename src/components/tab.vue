@@ -17,5 +17,7 @@ export default {
 <style scoped>
 .tab {
   border: 1px solid black;
+  background: white;
+  height: 40vh;
 }
 </style>

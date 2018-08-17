@@ -1,5 +1,5 @@
 <template>
-  <div class="logs">
+  <div>
     <div class="top-bar">
       <h3>Logs</h3>
       <button @click="pause">{{pauseText}}</button>
@@ -55,11 +55,6 @@ export default {
 </script>
 
 <style scoped>
-.logs {
-  display: flex;
-  flex-direction: column;
-}
-
 h3 {
   margin: 0;
 }
@@ -76,7 +71,7 @@ h3 {
 }
 
 .logs-list {
-  flex: 1;
+  height: calc(40vh - 38px);
   overflow: auto;
   margin: 0;
 }

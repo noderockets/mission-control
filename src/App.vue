@@ -90,12 +90,5 @@ body {
 
 #app {
   height: 100vh;
-  display: grid;
-  grid-template-columns: repeat(4, 25vw);
-  grid-template-rows: repeat(3, 33.33vh);
-  grid-template:
-    'a a a b'
-    'a a a c'
-    'd d d d';
 }
 </style>
