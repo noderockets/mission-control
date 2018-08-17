@@ -1,13 +1,24 @@
 <template>
   <div id="app">
     <Gauge :progress="50" />
-    <Parsed :rocketData="rocketData" />
-    <Actions
-      @arm-parachute="armParachute"
-      @disarm-parachute="disarmParachute"
-      @deploy-parachute="deployParachute"
-    />
-    <Logger :logStream="bus" />
+    <Tabs>
+      <Tab title="Logs">
+        <Logger :logStream="bus" />
+      </Tab>
+      <Tab title="Parsed">
+        <Parsed :rocketData="rocketData" />
+      </Tab>
+      <Tab title="Actions">
+        <Actions
+          @arm-parachute="armParachute"
+          @disarm-parachute="disarmParachute"
+          @deploy-parachute="deployParachute"
+        />
+      </Tab>
+      <Tab title="Strategies">
+        Strategies will go here!
+      </Tab>
+    </Tabs>
   </div>
 </template>
 
@@ -18,6 +29,8 @@ import api from './api'
 import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
 import Actions from './components/actions.vue'
+import Tabs from './components/tabs.vue'
+import Tab from './components/tab.vue'
 import Parsed from './components/parsed.vue'
 import Logger from './components/logger.vue'
 
@@ -41,6 +54,8 @@ export default {
     Button,
     Gauge,
     Actions,
+    Tabs,
+    Tab,
     Parsed,
     Logger
   },
@@ -70,12 +85,11 @@ body {
 #app {
   height: 100vh;
   display: grid;
-  grid-template-columns: 3fr 1fr;
-  grid-template-rows: 2fr 1fr;
-}
-
-.logs {
-  grid-column: 1 / 3;
-  grid-row: 2 / 4;
+  grid-template-columns: repeat(4, 25vw);
+  grid-template-rows: repeat(3, 33.33vh);
+  grid-template:
+    'a a a b'
+    'a a a c'
+    'd d d d';
 }
 </style>
