@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <LineChart :data="chartData" />
-    <Rocket :rocketData="rocketData" width="499px" height="499px"/>
-    <Gauge :progress="50" />
+    <LineChart id="line" :data="chartData" />
+    <div class="right-section">
+      <Rocket :rocketData="rocketData" :width="200" :height="500"/>
+      <Gauge :progress="50" />
+    </div>
     <Tabs>
       <Tab title="Logs">
         <Logger :logStream="bus" />
@@ -90,5 +92,19 @@ body {
 
 #app {
   height: 100vh;
+  display: flex;
+}
+
+#line {
+  flex: 1;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.right-section > :last-child {
+  padding-top: 30px;
 }
 </style>
