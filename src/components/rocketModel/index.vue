@@ -57,39 +57,17 @@
       this.renderer.render(this.scene, this.camera)
     },
     updated () {
-      const curTimeStamp = get(this.rocketData, 'timestamp', Date.now())
-      const prevTimeStamp = get(this.prevRocketData, 'timestamp', Date.now())
-
-      const timeElapsed = (curTimeStamp - prevTimeStamp) / 1000 // Seconds
-
-
-      // #### Solution 1 ####
-      // const rotation = (val, elapsedSeconds) => {
-      //   const scalar = 14.375
-      //   return (val * elapsedSeconds) / scalar
-      // }
-
-      // const curX = get(this.rocketData.gyroscope, 'x', 0)
-      // const curY = get(this.rocketData.gyroscope, 'y', 0)
-      // const curZ = get(this.rocketData.gyroscope, 'z', 0)
-      // this.rocketModel.rotation.x = toRadians(rotation(curX, timeElapsed))
-      // this.rocketModel.rotation.y = toRadians(rotation(curY, timeElapsed))
-      // this.rocketModel.rotation.z = toRadians(rotation(curZ, timeElapsed))
-      // #### Solution 1 ####
-
-      // #### Solution 2 ####
+      const curTime = get(this.rocketData, 'timestamp', Date.now())
+      const prevTime = get(this.prevRocketData, 'timestamp', Date.now())
+      const dTime = (curTime - prevTime) / 1000 // Seconds
       const gyro = get(this.rocketData, 'gyroscope', {})
       const accel = get(this.rocketData, 'accelerometer', {})
       const compass = get(this.rocketData, 'magnetometer', {})
-
-      madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z, timeElapsed)
-      const updates = madgwick.toVector()
-
-      this.rocketModel.rotation.x = get(updates, 'x', 0)
-      this.rocketModel.rotation.y = get(updates, 'y', 0)
-      this.rocketModel.rotation.z = get(updates, 'z', 0)
-      // #### Solution 2 ####
-
+      madgwick.update(gyro.x / 1000, gyro.y / 1000, gyro.z / 1000, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z)
+      const { roll, pitch, heading } = madgwick.getEulerAngles()
+      this.rocketModel.rotation.x = roll
+      this.rocketModel.rotation.y = pitch
+      this.rocketModel.rotation.z = heading
       this.prevRocketData = this.rocketData
       this.renderer.render(this.scene, this.camera)
     }
