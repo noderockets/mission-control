@@ -45,14 +45,10 @@ export default {
     Logger
   },
   data: () => ({
-    num: 0,
     rocketData: {},
     bus
   }),
   methods: {
-    increment() {
-      this.num += 5
-    },
     armParachute: rocketApi.armParachute,
     disarmParachute: rocketApi.disarmParachute,
     deployParachute: rocketApi.deployParachute

@@ -11,27 +11,27 @@
       <tbody>
         <tr>
           <td>Temperature</td>
-          <td>{{truncated.temperature}}</td>
+          <td>{{temperature.current}}</td>
           <td>{{temperature.min}}</td>
           <td>{{temperature.max}}</td>
         </tr>
         <tr>
           <td>Pressure</td>
-          <td>{{truncated.pressure}}</td>
+          <td>{{pressure.current}}</td>
           <td>{{pressure.min}}</td>
           <td>{{pressure.max}}</td>
         </tr>
         <tr>
           <td>Altitude</td>
-          <td>{{truncated.altitude}}</td>
+          <td>{{altitude.current}}</td>
           <td>{{altitude.min}}</td>
           <td>{{altitude.max}}</td>
         </tr>
       </tbody>
     </table>
-    <div>Accelerometer: X: {{rocketData.accelerometer.x}} Y: {{rocketData.accelerometer.y}} Z: {{rocketData.accelerometer.z}}</div>
-    <div>Gyroscope: X: {{rocketData.gyroscope.x}} Y: {{rocketData.gyroscope.y}} Z: {{rocketData.gyroscope.z}}</div>
-    <div>Magnetometer: X: {{rocketData.magnetometer.x}} Y: {{rocketData.magnetometer.y}} Z: {{rocketData.magnetometer.z}}</div>
+    <div>Accelerometer: X: {{accelerometer.x}} Y: {{accelerometer.y}} Z: {{accelerometer.z}}</div>
+    <div>Gyroscope: X: {{gyroscope.x}} Y: {{gyroscope.y}} Z: {{gyroscope.z}}</div>
+    <div>Magnetometer: X: {{magnetometer.x}} Y: {{magnetometer.y}} Z: {{magnetometer.z}}</div>
     <div>Time: {{new Date(rocketData.timestamp).toLocaleTimeString()}}</div>
   </div>
 </template>
@@ -46,29 +46,32 @@ export default {
   name: 'Parsed',
   props: ['rocketData'],
   data: () => ({
-    temperature: { max: -Infinity, min: Infinity },
-    pressure: { max: -Infinity, min: Infinity },
-    altitude: { max: -Infinity, min: Infinity }
+    temperature: { current: null, max: -Infinity, min: Infinity },
+    pressure: { current: null, max: -Infinity, min: Infinity },
+    altitude: { current: null, max: -Infinity, min: Infinity }
   }),
   computed: {
-    truncated () {
-      return {
-        temperature: trim(this.rocketData.temperature),
-        pressure: trim(this.rocketData.pressure),
-        altitude: trim(this.rocketData.altitude),
-      }
+    accelerometer () {
+      return this.rocketData.accelerometer || {}
+    },
+    gyroscope () {
+      return this.rocketData.gyroscope || {}
+    },
+    magnetometer () {
+      return this.rocketData.magnetometer || {}
     }
   },
   methods:{
-    calculateExtremes (stat) {
-      if (this.truncated[stat] > this[stat].max) this[stat].max = this.truncated[stat]
-      if (this.truncated[stat] < this[stat].min) this[stat].min = this.truncated[stat]
+    calculate (stat) {
+      const val = this[stat].current = trim(this.rocketData[stat])
+      if (val > this[stat].max) this[stat].max = val
+      if (val < this[stat].min) this[stat].min = val
     }
   },
   updated () {
-    this.calculateExtremes('temperature')
-    this.calculateExtremes('pressure')
-    this.calculateExtremes('altitude')
+    this.calculate('temperature')
+    this.calculate('pressure')
+    this.calculate('altitude')
   }
 }
 </script>
