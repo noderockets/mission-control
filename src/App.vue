@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <LineChart :data="chartData" />
+    <Rocket :rocketData="rocketData" width="499px" height="499px"/>
     <Gauge :progress="50" />
     <Tabs>
       <Tab title="Logs">
@@ -25,9 +27,11 @@
 <script>
 import Vue from 'vue'
 
+import Rocket from './components/rocketModel/index.vue'
 import api from './api'
 import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
+import LineChart from './components/lineChart.vue'
 import Actions from './components/actions.vue'
 import Tabs from './components/tabs.vue'
 import Tab from './components/tab.vue'
@@ -51,13 +55,15 @@ rocketApi.onRocketData(msg => {
 export default {
   name: 'app',
   components: {
+    Actions,
     Button,
     Gauge,
-    Actions,
-    Tabs,
-    Tab,
+    LineChart,
+    Logger,
     Parsed,
-    Logger
+    Rocket,
+    Tabs,
+    Tab
   },
   data: () => ({
     rocketData: {},
@@ -68,7 +74,7 @@ export default {
     disarmParachute: rocketApi.disarmParachute,
     deployParachute: rocketApi.deployParachute
   },
-  mounted () {
+  mounted() {
     bus.$on('rocket-data', msg => {
       this.rocketData = msg
     })
