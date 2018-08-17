@@ -1,5 +1,15 @@
 import io from 'socket.io-client'
 
+const bind = (emitter, cb, types) => {
+  types.forEach(type => {
+    emitter.on(type, msg => {
+      msg = msg || {}
+      msg.type = type
+      cb(msg)
+    })
+  })
+}
+
 export default (opts = {}) => {
   const rocket = io(opts.rocketURL)
   return {
@@ -8,12 +18,12 @@ export default (opts = {}) => {
     onParachuteDisarmed: cb => rocket.on('parachute-disarmed', cb),
     onParachuteDeployed: cb => rocket.on('parachute-deployed', cb),
 
-    onData: cb => {
-      rocket.on('rocket-data', msg => cb('rocket-data', msg))
-      rocket.on('parachute-armed', msg => cb('parachute-armed', msg))
-      rocket.on('parachute-disarmed', msg => cb('parachute-disarmed', msg))
-      rocket.on('parachute-deployed', msg => cb('parachute-deployed', msg))
-    },
+    onData: cb => bind(rocket, cb, [
+      'rocket-data',
+      'parachute-armed',
+      'parachute-disarmed',
+      'parachute-deployed'
+    ]),
 
     deployParachute: () => rocket.emit('deploy-parachute'),
     armParachute: () => rocket.emit('arm-parachute'),
