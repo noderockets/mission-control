@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <LineChart id="line" :data="accelerometer" :height="400" :width="400"/>
+    <LineChart id="line" :data="altitude" :headers="['Time', 'Altitude']"/>
     <div class="right-section">
       <Rocket :rocketData="rocketData" :width="200" :height="500"/>
       <Gauge :progress="50" />
@@ -41,7 +41,8 @@ import Parsed from './components/parsed.vue'
 import Logger from './components/logger.vue'
 
 const rocketApi = api({
-  rocketURL: 'http://10.0.0.118'
+  // rocketURL: 'http://10.0.0.118'
+  rocketURL: 'localhost:1235'
 })
 
 const bus = new Vue()
@@ -74,6 +75,10 @@ export default {
   computed: {
     accelerometer () {
       return this.rocketData.accelerometer || {}
+    },
+    altitude () {
+      // Convert meters to feet
+      return Math.round((this.rocketData.altitude || 0) * 3.28084)
     },
     gyroscope () {
       return this.rocketData.gyroscope || {}
