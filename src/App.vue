@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <LineChart id="line" :data="altitude" :headers="['Time', 'Altitude']"/>
+    <LineChart id="line" :data="rocketData" :headers="['Time', 'Altitude']"/>
     <div class="right-section">
       <Rocket :rocketData="rocketData" :width="200" :height="500"/>
       <Gauge :progress="50" />
-      <MaxMin :data="altitude" label="Altitude" />
     </div>
     <Tabs>
       <Tab title="Logs">
@@ -39,7 +38,6 @@ import Actions from './components/actions.vue'
 import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
 import LineChart from './components/lineChart.vue'
-import MaxMin from './components/maxMin.vue'
 import Logger from './components/logger.vue'
 import Parsed from './components/parsed.vue'
 import Rocket from './components/rocketModel/index.vue'
@@ -49,8 +47,8 @@ import Tab from './components/tab.vue'
 
 const rocketApi = api({
   // rocketURL: 'http://10.0.0.118'
-  // rocketURL: 'localhost:1235'
-  rocketURL: 'ws://10.0.0.141'
+  rocketURL: 'localhost:1235'
+  // rocketURL: 'ws://10.0.0.141'
 })
 
 const bus = new Vue()
@@ -83,7 +81,6 @@ export default {
     Gauge,
     LineChart,
     Logger,
-    MaxMin,
     Parsed,
     Rocket,
     Strategies,
