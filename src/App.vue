@@ -4,6 +4,7 @@
     <div class="right-section">
       <Rocket :rocketData="rocketData" :width="200" :height="500"/>
       <Gauge :progress="50" />
+      <MaxMin :data="altitude" label="Altitude" />
     </div>
     <Tabs>
       <Tab title="Logs">
@@ -29,16 +30,17 @@
 <script>
 import Vue from 'vue'
 
-import Rocket from './components/rocketModel/index.vue'
 import api from './api'
+import Actions from './components/actions.vue'
 import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
 import LineChart from './components/lineChart.vue'
-import Actions from './components/actions.vue'
+import MaxMin from './components/maxMin.vue'
+import Logger from './components/logger.vue'
+import Parsed from './components/parsed.vue'
+import Rocket from './components/rocketModel/index.vue'
 import Tabs from './components/tabs.vue'
 import Tab from './components/tab.vue'
-import Parsed from './components/parsed.vue'
-import Logger from './components/logger.vue'
 
 const rocketApi = api({
   // rocketURL: 'http://10.0.0.118'
@@ -63,6 +65,7 @@ export default {
     Gauge,
     LineChart,
     Logger,
+    MaxMin,
     Parsed,
     Rocket,
     Tabs,
