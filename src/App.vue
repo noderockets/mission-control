@@ -21,7 +21,11 @@
         />
       </Tab>
       <Tab title="Strategies">
-        Strategies will go here!
+        <Strategies
+          :strategies="strategies"
+          @activate-strategy="activateStrategy"
+          @deactivate-strategy="deactivateStrategy"
+        />
       </Tab>
     </Tabs>
   </div>
@@ -39,12 +43,14 @@ import MaxMin from './components/maxMin.vue'
 import Logger from './components/logger.vue'
 import Parsed from './components/parsed.vue'
 import Rocket from './components/rocketModel/index.vue'
+import Strategies from './components/strategies.vue'
 import Tabs from './components/tabs.vue'
 import Tab from './components/tab.vue'
 
 const rocketApi = api({
   // rocketURL: 'http://10.0.0.118'
-  rocketURL: 'localhost:1235'
+  // rocketURL: 'localhost:1235'
+  rocketURL: 'ws://10.0.0.141'
 })
 
 const bus = new Vue()
@@ -55,6 +61,18 @@ rocketApi.onData(msg => {
 
 rocketApi.onRocketData(msg => {
   bus.$emit('rocket-data', msg)
+})
+
+rocketApi.onStrategyData(msg => {
+  bus.$emit('strategy-data', msg)
+})
+
+rocketApi.onStrategyLog(msg => {
+  bus.$emit('strategy-log', msg)
+})
+
+rocketApi.onStrategyError(msg => {
+  bus.$emit('strategy-error', msg)
 })
 
 export default {
@@ -68,11 +86,13 @@ export default {
     MaxMin,
     Parsed,
     Rocket,
+    Strategies,
     Tabs,
     Tab
   },
   data: () => ({
     rocketData: {},
+    strategies: [],
     bus
   }),
   computed: {
@@ -93,11 +113,22 @@ export default {
   methods: {
     armParachute: rocketApi.armParachute,
     disarmParachute: rocketApi.disarmParachute,
-    deployParachute: rocketApi.deployParachute
+    deployParachute: rocketApi.deployParachute,
+    activateStrategy: rocketApi.activateStrategy,
+    deactivateStrategy: rocketApi.deactivateStrategy
   },
   mounted() {
     bus.$on('rocket-data', msg => {
       this.rocketData = msg
+    })
+    bus.$on('strategy-data', msg => {
+      this.strategies = msg
+    })
+    bus.$on('strategy-log', msg => {
+      console.log('strategy log:', msg)
+    })
+    bus.$on('strategy-error', msg => {
+      console.error('strategy error:', msg)
     })
   }
 }

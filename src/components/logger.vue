@@ -10,7 +10,7 @@
       </div>
     </div>
     <ul class="logs-list" ref="logsList">
-      <li v-for="log in logs" v-bind:key="log.timestamp">{{log}}</li>
+      <li v-for="log in logs" :key="log.timestamp">{{log}}</li>
     </ul>
   </div>
 </template>
