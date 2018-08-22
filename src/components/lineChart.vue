@@ -1,11 +1,13 @@
 <template>
-  <svg :width="width" :height="height">
-    <g :transform="`translate(${margin.left},${margin.top})`">
-      <g ref="xAxis" class="x axis" :transform="`translate(0, ${_height})`" />
-      <g ref="yAxis" class="y axis" />
-      <path class="line" :d="line(chartData)" fill="none" stroke="steelblue" :stroke-width="1.5" />
-    </g>
-  </svg>
+  <div class="wrapper">
+    <svg class="chart" :width="width" :height="height">
+      <g :transform="`translate(${margin.left},${margin.top})`">
+        <g ref="xAxis" class="x axis" :transform="`translate(0, ${_height})`" opacity="1.0"/>
+        <g ref="yAxis" class="y axis" />
+        <path class="line" :d="line(chartData)" fill="none" stroke="white" :stroke-width="3" />
+      </g>
+    </svg>
+  </div>
 </template>
 
 <script>
@@ -17,11 +19,11 @@
       data: { type: Object },
       headers: { type: Array, default: ["Time", "Variation"] },
       height: { type: Number, default: 500 },
-      width: { type: Number, default: 500 }
+      width: { type: Number, default: window.innerWidth }
     },
     data: () => ({
       chartData: [],
-      margin: { top: 20, right: 20, bottom: 30, left: 50 }
+      margin: { top: 20, right: 20, bottom: 30, left: 40 }
     }),
     computed: {
       _width () {
@@ -68,9 +70,4 @@
 </script>
 
 <style scoped>
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 3px;
-}
 </style>

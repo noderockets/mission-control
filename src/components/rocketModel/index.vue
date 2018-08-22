@@ -46,7 +46,6 @@
     }),
     async mounted () {
       this.scene = new THREE.Scene()
-      this.scene.background = new THREE.Color(0xe8e8e8)
       this.camera = new THREE.PerspectiveCamera(
         75,
         this.width / this.height,
@@ -56,7 +55,8 @@
       this.camera.position.x = 0
       this.camera.position.y = 0
       this.camera.position.z = 10
-      this.renderer = new THREE.WebGLRenderer({ canvas: this.$refs.canvas })
+      this.renderer = new THREE.WebGLRenderer({ canvas: this.$refs.canvas, alpha: true })
+      this.renderer.setClearColor(0xffffff, 0);
       this.rocketModel = await getRocketModel()
       this.scene.add(this.rocketModel)
       loadLight(this.scene)
@@ -72,8 +72,8 @@
       madgwick.update(gyro.x / 1000, gyro.y / 1000, gyro.z / 1000, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z)
       const { roll, pitch, heading } = madgwick.getEulerAngles()
       this.rocketModel.rotation.x = roll
-      this.rocketModel.rotation.y = pitch
-      this.rocketModel.rotation.z = heading
+      this.rocketModel.rotation.y = heading
+      this.rocketModel.rotation.z = pitch
       this.prevRocketData = this.rocketData
       this.renderer.render(this.scene, this.camera)
     }

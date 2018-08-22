@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <div class="left-section">
-      <LineChart id="line" :data="rocketData" :headers="['Time', 'Altitude']"/>
+    <div class="background">
+      <Logo :scale="900"/>
     </div>
-    <div class="right-section">
-      <Rocket :rocketData="rocketData" :width="200" :height="500"/>
-      <!-- <Gauge progress="50" /> -->
+    <div class="graph-wrapper">
+      <LineChart :data="rocketData" :headers="['Time', 'Altitude']"/>
+    </div>
+    <div class="rocket-wrapper">
+      <Rocket class="rocket" :rocketData="rocketData" :width="300" :height="500"/>
     </div>
     <Tabs>
       <Tab title="Logs">
@@ -41,6 +43,7 @@ import Actions from './components/actions.vue'
 import Button from './components/button.vue'
 import Gauge from './components/gauge.vue'
 import LineChart from './components/lineChart.vue'
+import Logo from './components/logo.vue'
 import Logger from './components/logger.vue'
 import Parsed from './components/parsed.vue'
 import Rocket from './components/rocketModel/index.vue'
@@ -85,6 +88,7 @@ export default {
     Gauge,
     LineChart,
     Logger,
+    Logo,
     Parsed,
     Rocket,
     Strategies,
@@ -138,9 +142,18 @@ export default {
 
 <style>
 body {
-  background-color: #a1a1a1;
+  background-color: #7b7b7b;
   margin: 0;
   font-family: sans-serif;
+}
+
+.background {
+  position: absolute;
+  height: 100%;
+  opacity: 0.05;
+  text-align: center;
+  width: 100%;
+  z-index: -1;
 }
 
 #app {
@@ -148,24 +161,18 @@ body {
   display: flex;
 }
 
-#line {
-  flex: 1;
+.graph-wrapper {
+  width: 100%;
 }
 
-.left-section {
-  align-items: flex-start;
-  display: flex;
-  flex: 1;
+.rocket-wrapper {
+  position: absolute;
+  text-align: center;
+  width: 100%;
 }
 
-.right-section {
-  align-items: flex-end;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-}
-
-.right-section > :last-child {
-  padding-top: 30px;
+.rocket {
+  float: right;
+  margin-top: -80px;
 }
 </style>
