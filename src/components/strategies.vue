@@ -10,7 +10,7 @@
       <h2>{{strategy.name}}</h2>
       <ul>
         <li v-for="(prop, key) in strategy.props" :key="key">
-          <label :title="prop.description">{{key}}:</label>
+          <label :title="prop.description">{{prop.displayName || key}}:</label>
           <input
             :type="prop.type === 'boolean' ? 'checkbox' : 'text'"
             :value="key in strategy.data.props ? strategy.data.props[key] : prop.default"
