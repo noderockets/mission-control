@@ -1,5 +1,11 @@
 <template>
-  <canvas ref="canvas" :width="width" :height="height" :rotation="rocketData.gyroscope"/>
+  <canvas
+    ref="canvas"
+    :width="width"
+    :height="height"
+    :style="{'width': `${width}px`, 'height': `${height}px`}"
+    :rotation="rocketData.gyroscope"
+  />
 </template>
 
 <script>

@@ -1,9 +1,11 @@
 <template>
   <div id="app">
-    <LineChart id="line" :data="rocketData" :headers="['Time', 'Altitude']"/>
+    <div class="left-section">
+      <LineChart id="line" :data="rocketData" :headers="['Time', 'Altitude']"/>
+    </div>
     <div class="right-section">
       <Rocket :rocketData="rocketData" :width="200" :height="500"/>
-      <Gauge :progress="50" />
+      <!-- <Gauge progress="50" /> -->
     </div>
     <Tabs>
       <Tab title="Logs">
@@ -47,8 +49,8 @@ import Tab from './components/tab.vue'
 
 const rocketApi = api({
   // rocketURL: 'http://10.0.0.118'
-  rocketURL: 'localhost:1235'
-  // rocketURL: 'ws://10.0.0.141'
+  // rocketURL: 'localhost:1235'
+  rocketURL: 'ws://10.0.0.50'
 })
 
 const bus = new Vue()
@@ -133,6 +135,7 @@ export default {
 
 <style>
 body {
+  background-color: #a1a1a1;
   margin: 0;
   font-family: sans-serif;
 }
@@ -146,8 +149,16 @@ body {
   flex: 1;
 }
 
-.right-section {
+.left-section {
+  align-items: flex-start;
   display: flex;
+  flex: 1;
+}
+
+.right-section {
+  align-items: flex-end;
+  display: flex;
+  flex: 1;
   flex-direction: column;
 }
 
