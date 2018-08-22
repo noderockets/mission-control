@@ -52,6 +52,7 @@
       data (data) {
       if (!this.xScale || !this.yScale) return
         if (this.chartData.length > 1000) this.chartData.shift()
+        data.altitude = Math.round((data.altitude * 3.28084) * 100) / 100
         this.chartData.push(data)
 
         this.xScale.domain(d3.extent(this.chartData, d => d.timestamp))
