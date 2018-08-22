@@ -13,8 +13,8 @@
   import * as AHRS from 'ahrs'
   import { get } from 'lodash'
 
-  import loadLight from './loaders/light'
-  import getRocketModel from './loaders/rocket'
+  import loadLight from './rocket-parts/loaders/light'
+  import getRocketModel from './rocket-parts/loaders/rocket'
 
   const madgwick = new AHRS({
     sampleInterval: 20,
@@ -31,7 +31,7 @@
       },
       rocketData: {
         type: Object,
-        default: {}
+        default: () => ({})
       },
       width: {
         default: 500,
@@ -63,9 +63,6 @@
       this.renderer.render(this.scene, this.camera)
     },
     updated () {
-      const curTime = get(this.rocketData, 'timestamp', Date.now())
-      const prevTime = get(this.prevRocketData, 'timestamp', Date.now())
-      const dTime = (curTime - prevTime) / 1000 // Seconds
       const gyro = get(this.rocketData, 'gyroscope', {})
       const accel = get(this.rocketData, 'accelerometer', {})
       const compass = get(this.rocketData, 'magnetometer', {})

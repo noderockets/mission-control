@@ -12,12 +12,11 @@
 
 <script>
   import * as d3 from 'd3'
-  import { get } from 'lodash'
 
   export default {
     props: {
       data: { type: Object },
-      headers: { type: Array, default: ["Time", "Variation"] },
+      headers: { type: Array, default: () => ["Time", "Variation"] },
       height: { type: Number, default: 500 },
       width: { type: Number, default: window.innerWidth }
     },
