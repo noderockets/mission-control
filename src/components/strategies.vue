@@ -13,8 +13,8 @@
           <label :title="prop.description">{{key}}:</label>
           <input
             :type="prop.type === 'boolean' ? 'checkbox' : 'text'"
-            :value="strategy.data.props[key] || prop.default"
-            :checked="strategy.data.props[key] || prop.default"
+            :value="key in strategy.data.props ? strategy.data.props[key] : prop.default"
+            :checked="key in strategy.data.props ? strategy.data.props[key] : prop.default"
             @change="updateStrategy(strategy, key, prop.type, $event)"
           />
         </li>
@@ -37,10 +37,10 @@ export default {
       if (!strategy.data.enabled) this.$emit('activate-strategy', strategy.key)
       else this.$emit('deactivate-strategy', strategy.key)
     },
-    updateStrategy (strategy, propKey, type, newValue) {
-      const nextProps = strategy.data.props
-      nextProps[propKey] = type === number ? +newValue : newValue
-      this.$emit('update-strategy', { key: strategy.key, nextProps })
+    updateStrategy (strategy, key, type, e) {
+      const rawValue = type === 'boolean' ? e.target.checked : e.target.value
+      const value = type === 'number' ? +rawValue : rawValue
+      this.$emit('update-strategy', { strategyKey: strategy.key, key, value })
     }
   }
 }

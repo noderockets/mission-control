@@ -24,6 +24,7 @@
           :strategies="strategies"
           @activate-strategy="activateStrategy"
           @deactivate-strategy="deactivateStrategy"
+          @update-strategy="updateStrategy"
         />
       </Tab>
     </Tabs>
@@ -47,8 +48,9 @@ import Tab from './components/tab.vue'
 
 const rocketApi = api({
   // rocketURL: 'http://10.0.0.118'
-  rocketURL: 'localhost:1235'
+  // rocketURL: 'localhost:1235'
   // rocketURL: 'ws://10.0.0.141'
+  rocketURL: 'ws://10.0.0.50'
 })
 
 const bus = new Vue()
@@ -112,6 +114,7 @@ export default {
     disarmParachute: rocketApi.disarmParachute,
     deployParachute: rocketApi.deployParachute,
     activateStrategy: rocketApi.activateStrategy,
+    updateStrategy: rocketApi.updateStrategy,
     deactivateStrategy: rocketApi.deactivateStrategy
   },
   mounted() {
@@ -122,10 +125,10 @@ export default {
       this.strategies = msg
     })
     bus.$on('strategy-log', msg => {
-      console.log('strategy log:', msg)
+      console.log('strategy log:', JSON.stringify(msg, null, 2))
     })
     bus.$on('strategy-error', msg => {
-      console.error('strategy error:', msg)
+      console.error('strategy error:', JSON.stringify(msg, null, 2))
     })
   }
 }

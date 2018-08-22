@@ -39,6 +39,7 @@ export default (opts = {}) => {
     disarmParachute: () => rocket.emit('disarm-parachute'),
 
     activateStrategy: key => rocket.emit('activate-strategy', key),
+    updateStrategy: data => rocket.emit('update-strategy', data),
     deactivateStrategy: key => rocket.emit('deactivate-strategy', key)
   }
 }
