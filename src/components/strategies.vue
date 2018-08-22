@@ -1,24 +1,26 @@
 <template>
-  <div>
+  <div class="strategies">
     <ul>
       <li v-for="strategy in strategies" :key="strategy.key" :title="strategy.description">
         <input type="checkbox" :checked="strategy.data.enabled" @change="toggleStrategy(strategy)" />
         {{strategy.name}}
       </li>
     </ul>
-    <div v-for="strategy in activeStrategies" :key="strategy.key">
-      <h2>{{strategy.name}}</h2>
-      <ul>
-        <li v-for="(prop, key) in strategy.props" :key="key">
-          <label :title="prop.description">{{prop.displayName || key}}:</label>
-          <input
-            :type="prop.type === 'boolean' ? 'checkbox' : 'text'"
-            :value="key in strategy.data.props ? strategy.data.props[key] : prop.default"
-            :checked="key in strategy.data.props ? strategy.data.props[key] : prop.default"
-            @change="updateStrategy(strategy, key, prop.type, $event)"
-          />
-        </li>
-      </ul>
+    <div>
+      <div v-for="strategy in activeStrategies" :key="strategy.key">
+        <h2>{{strategy.name}}</h2>
+        <ul>
+          <li v-for="(prop, key) in strategy.props" :key="key">
+            <label :title="prop.description">{{prop.displayName || key}}:</label>
+            <input
+              :type="prop.type === 'boolean' ? 'checkbox' : 'text'"
+              :value="key in strategy.data.props ? strategy.data.props[key] : prop.default"
+              :checked="key in strategy.data.props ? strategy.data.props[key] : prop.default"
+              @change="updateStrategy(strategy, key, prop.type, $event)"
+            />
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -47,4 +49,9 @@ export default {
 </script>
 
 <style scoped>
+.strategies {
+  display: flex;
+  height: 100%;
+  overflow: auto;
+}
 </style>
