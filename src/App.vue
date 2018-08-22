@@ -17,6 +17,7 @@
           @arm-parachute="armParachute"
           @disarm-parachute="disarmParachute"
           @deploy-parachute="deployParachute"
+          @reset-parachute="resetParachute"
         />
       </Tab>
       <Tab title="Strategies">
@@ -113,6 +114,7 @@ export default {
     armParachute: rocketApi.armParachute,
     disarmParachute: rocketApi.disarmParachute,
     deployParachute: rocketApi.deployParachute,
+    resetParachute: rocketApi.resetParachute,
     activateStrategy: rocketApi.activateStrategy,
     updateStrategy: rocketApi.updateStrategy,
     deactivateStrategy: rocketApi.deactivateStrategy

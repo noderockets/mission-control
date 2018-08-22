@@ -35,6 +35,7 @@ export default (opts = {}) => {
     ]),
 
     deployParachute: () => rocket.emit('deploy-parachute'),
+    resetParachute: () => rocket.emit('reset-parachute'),
     armParachute: () => rocket.emit('arm-parachute'),
     disarmParachute: () => rocket.emit('disarm-parachute'),
 
