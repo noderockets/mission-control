@@ -1,25 +1,112 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import Home from "./pages/Home";
+import Other from "./pages/other";
+import Launches from "./pages/Launches";
+import Launch from "./pages/Launch";
+import { Grommet, Box, Anchor, TextInput, Button } from "grommet";
+import Actions from "./components/Actions";
+import Notifications from "./components/Notifications";
+import Strategies from "./pages/Strategies";
+import Logo from "./white-logo.png";
+import { setBase, getBase } from "./api";
+const AppBar = props => (
+  <Box
+    tag="header"
+    direction="row"
+    align="center"
+    background="brand"
+    pad={{ left: "medium", right: "small", vertical: "small" }}
+    elevation="medium"
+    style={{ zIndex: "1" }}
+    {...props}
+  />
+);
+
+const theme = {
+  global: {
+    font: {
+      family: "Roboto",
+      size: "14px",
+      height: "20px"
+    }
+  }
+};
 
 function App() {
+  const [base, setBaseState] = useState(getBase());
+  const [baseChanged, setBaseChanged] = useState(getBase());
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Grommet theme={theme}>
+      <Notifications />
+      <Router>
+        <AppBar>
+          <Box direction="row" align="center">
+            <img
+              style={{ height: 60, width: 70 }}
+              src={Logo}
+              alt="Node Rockets Logo"
+            />
+          </Box>
+          <Box margin="medium">
+            <nav>
+              <Link to="/">
+                <Anchor
+                  tag="span"
+                  primary
+                  label="Data Stream"
+                  color="light-1"
+                  margin="xsmall"
+                ></Anchor>
+              </Link>
+              <Link to="/launches">
+                <Anchor
+                  tag="span"
+                  label="Launches"
+                  color="light-1"
+                  margin="xsmall"
+                ></Anchor>
+              </Link>
+              <Link to="/strategies">
+                <Anchor
+                  tag="span"
+                  label="Strategies"
+                  color="light-1"
+                  margin="xsmall"
+                ></Anchor>
+              </Link>
+            </nav>
+          </Box>
+          <Box alignSelf="end" direction="row" align="center">
+            <TextInput
+              id="base"
+              placeholder="IP of Pi"
+              value={base}
+              onChange={({ target: { value } }) => {
+                setBase(value);
+                setBaseState(value);
+              }}
+            />
+            {baseChanged !== base && (
+              <Button
+                primary
+                margin="small"
+                onClick={() => window.location.reload()}
+                label="Refresh!"
+              />
+            )}
+          </Box>
+        </AppBar>
+        <Switch>
+          <Route exact path="/" component={Home}></Route>
+          <Route path="/other" component={Other}></Route>
+          <Route path="/launches" component={Launches}></Route>
+          <Route path="/launch/:filename" component={Launch}></Route>
+          <Route path="/strategies" exact component={Strategies}></Route>
+        </Switch>
+        <Actions />
+      </Router>
+    </Grommet>
   );
 }
 
