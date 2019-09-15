@@ -24,8 +24,8 @@ function Launches() {
         {launches.length
           ? launches.map(launch => (
               <li key={launch}>
-                <Link to={`/launch/${launch}`}>{launch}</Link>
-                <Button onClick={() => deleteIt(launch)}>
+                <Link to={`/launch/${launch.filename}`}>{launch.display}</Link>
+                <Button onClick={() => deleteIt(launch.filename)}>
                   <FormClose />
                 </Button>
               </li>

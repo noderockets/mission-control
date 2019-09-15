@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import io from "socket.io-client";
 import axios from "axios";
-
+import { compareDesc, formatDistance, format } from "date-fns";
 let base = localStorage.base || "192.168.0.83";
-let baseUrl = `http://${base}`
+let baseUrl = `http://${base}`;
 export const getBase = () => {
   return base;
 };
@@ -22,8 +22,10 @@ export const emit = (...args) => {
 
 socket.on("connect", () => console.log("connected"));
 socket.on("disconnect", () => console.log("disconnected"));
+socket.on("strategy-log", console.log);
 
 export function transform(d) {
+  if (!d.altitude) return false;
   return {
     timestamp: new Date(d.timestamp),
     altitude: d.altitude * 3.28084
@@ -32,11 +34,52 @@ export function transform(d) {
 
 export async function getLaunches() {
   const { data } = await axios.get(`${baseUrl}/launches`);
-  return data;
+  return data
+    .map(launch => {
+      const now = new Date();
+      let date = new Date(launch);
+
+      if (now.getTime() - date.getTime() > 1000 * 60 * 60 * 24 * 2) {
+        date = format(date, "MMM do yyyy h:mmb");
+      } else {
+        date = formatDistance(date, now);
+      }
+      return {
+        filename: launch,
+        display: date,
+        date: new Date(launch)
+      };
+    })
+    .sort((a, b) => compareDesc(a.date, b.date));
 }
+
+function getClosestAltitude(altitudeData, timestamp) {
+  return altitudeData.reduce((prev, curr) =>
+    Math.abs(curr.timestamp - timestamp) < Math.abs(prev.timestamp - timestamp)
+      ? curr
+      : prev
+  );
+}
+
 export async function getLaunch(filename) {
-  const { data } = await axios.get(`${baseUrl}/launch/${filename}`);
-  return data.map(transform);
+  const {
+    data: { altitudeData, events, strategyData }
+  } = await axios.get(`${baseUrl}/launch/${filename}`);
+
+  const eventData = events.map(evt => {
+    const { altitude } = getClosestAltitude(altitudeData, evt.timestamp);
+    return { ...evt, altitude };
+  });
+  strategyData = strategyData.map(evt => {
+    const { altitude } = getClosestAltitude(altitudeData, evt.timestamp);
+    return { ...evt, altitude };
+  });
+
+  return {
+    altitude: altitudeData,
+    events: eventData,
+    strategyData
+  };
 }
 export async function deleteLaunch(filename) {
   await axios.delete(`${baseUrl}/launch/${filename}`);

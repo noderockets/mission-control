@@ -10,7 +10,7 @@ import useWindowSize from "@rehooks/window-size";
 var margin = { top: 20.5, right: 30, bottom: 30, left: 40.5 },
   height = 500 - margin.top - margin.bottom;
 
-export default function AltitudeGraph({ data = [] }) {
+export default function AltitudeGraph({ data = [], launch, parachute }) {
   const { innerWidth } = useWindowSize();
   const width = innerWidth - margin.left - margin.right;
 
@@ -27,14 +27,13 @@ export default function AltitudeGraph({ data = [] }) {
 
   x.domain(extent(data, d => d.timestamp));
   y.domain(
-    extent(data, d => d.altitude)
-      .map((e, i) => {
-        if (!e) return false;
-        if (i === 0) {
-          return e - 5;
-        }
-        return e + 5;
-      })
+    extent(data, d => d.altitude).map((e, i) => {
+      if (!e) return false;
+      if (i === 0) {
+        return e - 5;
+      }
+      return e + 5;
+    })
   );
 
   return (
@@ -47,6 +46,32 @@ export default function AltitudeGraph({ data = [] }) {
           <Axis className="x axis" axis={xAxis} translate={[0, height]} />
           <Axis className="y axis" axis={yAxis} />
           <path className="line" d={line(data)} />
+          {launch && (
+            <g
+              class="event"
+              transform={`translate(${x(launch.timestamp)},${y(
+                launch.altitude
+              )})`}
+            >
+              <circle cx="-2.5" cy="2.5" r="5" />
+              <text x="-20" y="20">
+                Launch
+              </text>
+            </g>
+          )}
+          {parachute && (
+            <g
+              class="event"
+              transform={`translate(${x(parachute.timestamp)},${y(
+                parachute.altitude
+              )})`}
+            >
+              <circle cx="-2.5" cy="2.5" r="5" />
+              <text x="-30" y="20">
+                Parachute
+              </text>
+            </g>
+          )}
         </g>
       </svg>
     </div>

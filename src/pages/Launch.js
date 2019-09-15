@@ -7,18 +7,24 @@ export default function Launch({ match }) {
     params: { filename }
   } = match;
 
-  const [launch, setLaunch] = useState();
+  const [launchData, setLaunchData] = useState();
 
   useEffect(() => {
     getLaunch(filename)
-      .then(setLaunch)
+      .then(setLaunchData)
       .catch(console.error);
   }, [filename]);
 
   return (
     <div>
       <h1>Launch {filename}</h1>
-      <AltitudeGraph data={launch}></AltitudeGraph>
+      {launchData && (
+        <AltitudeGraph
+          data={launchData.altitude}
+          launch={launchData.launch}
+          parachute={launchData.parachute}
+        ></AltitudeGraph>
+      )}
     </div>
   );
 }
