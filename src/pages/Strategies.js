@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSocket, emit } from "../api";
 import { TextInput, Heading, Box, CheckBox, FormField } from "grommet";
 
 export default function Strategies() {
   const [strategies, setStrategies] = useState([]);
   const [activeStrategies, setActiveStrategies] = useState([]);
+
   useSocket("strategy-data", data => {
     setStrategies(data);
     setActiveStrategies(data.filter(strat => strat.data.enabled));
   });
 
+  useEffect(() => {
+    emit("get-strategy-data");
+  }, []);
   const toggleStrategy = strategy => {
     if (!strategy.data.enabled) {
       emit("activate-strategy", strategy.key);

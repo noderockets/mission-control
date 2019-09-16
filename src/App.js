@@ -9,7 +9,7 @@ import Actions from "./components/Actions";
 import Notifications from "./components/Notifications";
 import Strategies from "./pages/Strategies";
 import Logo from "./white-logo.png";
-import { setBase, getBase } from "./api";
+import { setBase, getBase, useSocket } from "./api";
 const AppBar = props => (
   <Box
     tag="header"
@@ -23,19 +23,40 @@ const AppBar = props => (
   />
 );
 
-const theme = {
-  global: {
-    font: {
-      family: "Roboto",
-      size: "14px",
-      height: "20px"
-    }
-  }
-};
-
 function App() {
   const [base, setBaseState] = useState(getBase());
   const [baseChanged, setBaseChanged] = useState(getBase());
+  const [connected, setConnected] = useState(false);
+
+  useSocket("connect", () => setConnected(true));
+  useSocket("disconnect", () => setConnected(false));
+
+  let theme = {
+    global: {
+      colors: {
+        green: "#43A047",
+        red: "#F4511E"
+      },
+      font: {
+        family: "Roboto",
+        size: "14px",
+        height: "20px"
+      }
+    }
+  };
+
+  if (!connected) {
+    theme.global.colors = {
+      brand: "#666",
+      "accent-1": "#777",
+      "accent-2": "#777",
+      "accent-3": "#777",
+      "accent-4": "#777",
+      green: "#777",
+      red: "#777"
+    };
+  }
+
   return (
     <Grommet theme={theme}>
       <Notifications />

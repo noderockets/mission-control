@@ -19,7 +19,7 @@ function Index() {
   return (
     <Box margin="medium">
       <h1>Altitude Graph</h1>
-      <AltitudeGraph data={rocketData} />
+      <AltitudeGraph altitude={rocketData} />
     </Box>
   );
 }

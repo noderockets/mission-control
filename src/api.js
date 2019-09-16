@@ -8,6 +8,14 @@ export const getBase = () => {
   return base;
 };
 
+if (window.location.protocol === "https:") {
+  fetch(`https://${base}/ping`).catch(err => {
+    if (window.confirm("Accept Cert?")) {
+      window.location = `https://${base}/redirect?url=${window.location.href}`;
+    }
+  });
+}
+
 export const setBase = newBase => {
   localStorage.base = newBase;
   return (base = newBase);
@@ -70,7 +78,7 @@ export async function getLaunch(filename) {
     const { altitude } = getClosestAltitude(altitudeData, evt.timestamp);
     return { ...evt, altitude };
   });
-  strategyData = strategyData.map(evt => {
+  const strategy = strategyData.map(evt => {
     const { altitude } = getClosestAltitude(altitudeData, evt.timestamp);
     return { ...evt, altitude };
   });
@@ -78,7 +86,7 @@ export async function getLaunch(filename) {
   return {
     altitude: altitudeData,
     events: eventData,
-    strategyData
+    strategyData: strategy
   };
 }
 export async function deleteLaunch(filename) {
